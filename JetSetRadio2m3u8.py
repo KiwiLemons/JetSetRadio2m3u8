@@ -1,8 +1,7 @@
 import argparse
 import re
-import sys
 import os
-import requests
+import urllib.request
 
 sources = ["https://jetsetradio.live/audioplayer/stations/classic/~list.js",
 "https://jetsetradio.live/audioplayer/stations/doomriders/~list.js",
@@ -29,9 +28,10 @@ else:
          dest = os.getcwd()
      for source in sources:
          #add except for no internet connection
-         response = requests.get(source).text
+         response = urllib.request.urlopen(source)
+         text = response.read().decode('utf-8')
          #findall returns a list with tuples in each element for groups
-         matches = re.findall(r"(.+)Array\[\1Array\.length\] = \"([^\"]+)\"\;",response)
+         matches = re.findall(r"(.+)Array\[\1Array\.length\] = \"([^\"]+)\"\;",text)
          #test if this is faster
          station = matches[0][0].lower()
          try:
