@@ -35,7 +35,7 @@ else:
          #test if this is faster
          station = matches[0][0].lower()
          try:
-             newfile = open(f"{dest}\\{station.capitalize()}.m3u8","w")
+             newfile = open(f"{dest}\\{matches[0][0][0].upper() + matches[0][0][1:]}.m3u8","w")
          except FileNotFoundError as error:
              #Currently if a destination is not valid then you have to go through the entire process of evaluating a whole source before it is noticed.
              print(f"{dest} does not exist.")
@@ -45,4 +45,4 @@ else:
              for idx, song in enumerate(matches):
                  newfile.write(f"\nhttps://jetsetradio.live/audioplayer/stations/{station}/{matches[idx][1]}.mp3")
              newfile.close()
-             print(f"Finished {station.capitalize()}")
+             print(f"Finished {matches[0][0][0].upper() + matches[0][0][1:]}")
