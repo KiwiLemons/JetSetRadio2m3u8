@@ -15,7 +15,6 @@ if sys.version_info < (3, 0):
     raise "This program requires Python version 3 or greater."
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-m","--meaning",help="Displays the type of music that each m3u8 file contains",action="store_true")
 parser.add_argument("-d","--destination", help="The dir where the m3u8 files are placed. If left blank it becomes the dir the program is running from.")
 args = parser.parse_args()
 
