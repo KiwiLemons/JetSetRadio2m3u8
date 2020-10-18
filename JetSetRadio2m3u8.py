@@ -21,24 +21,25 @@ if args.destination:
     dest = args.destination
 else:
     dest = os.getcwd()
-    for source in sources: 
-        req = request.Request(f"https://jetsetradio.live/{stationsDirectory}/{source}/~list.js")
+for source in sources: 
+    req = request.Request(f"https://jetsetradio.live/{stationsDirectory}/{source}/~list.js")
+    try:
+        response = request.urlopen(req)
+    except error.HTTPError as e:
+        print(f"Skipped {source} ({e.code})")
+    else:
+        text = response.read().decode('utf-8')
+        response.close()
+        tracks = re.findall(r"] = \"([^\"]+)\"\;",text)
         try:
-            response = request.urlopen(req)
-        except error.HTTPError as e:
-            print(f"Skipped {source} ({e.code})")
+            newfile = open(f"{dest}\\{source}.m3u8","w")
+        except FileNotFoundError:
+            print(f"{dest} does not exist.")
+            break
         else:
-            text = response.read().decode('utf-8')
-            response.close()
-            tracks = re.findall(r"] = \"([^\"]+)\"\;",text)
-            try:
-                newfile = open(f"{dest}\\{source}.m3u8","w")
-            except FileNotFoundError:
-                print(f"{dest} does not exist.")
-                break
-            else:
-                newfile.write("#")
-                for song in tracks:
-                    newfile.write(f"\nhttps://jetsetradio.live/{stationsDirectory}/{source}/{song}.mp3")
-                newfile.close()
-                print(f"Finished {source}")
+            newfile.write("#EXTM3U")
+            for song in tracks:
+                newfile.write(f"\n#EXTINF:-1,{song}")
+                newfile.write(f"\nhttps://jetsetradio.live/{stationsDirectory}/{source}/{song}.mp3")
+            newfile.close()
+            print(f"Finished {source}")
