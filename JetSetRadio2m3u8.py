@@ -4,11 +4,10 @@ import os
 from urllib import request, error
 import sys
 
-sources = ["butterflies","christmas","classic","crazytaxi","doomriders",
-"elaquent","endofdays","future","ggs","goldenrhinos",
-"halloween","hover","immortals","kingforanotherday","lofi",
-"loveshockers","memoriesoftokyoto","noisetanks","ollieking","poisonjam",
-"rapid99","revolution","summer","toejamandearl","ultraremixes"]
+sources = ["butterflies","christmas","classic","crazytaxi","djchidow","doomriders","endofdays",
+            "future","futuregeneration","ganjah","ggs","goldenrhinos","halloween","hover",
+            "immortals","jetmashradio","lofi","loveshockers","noisetanks", "ollieking",
+            "poisonjam","rapid99","revolution","siivagunner","summer","toejamandearl","ultraremixes"]
 stationsDirectory = "radio/stations"
 
 if sys.version_info < (3, 0):
