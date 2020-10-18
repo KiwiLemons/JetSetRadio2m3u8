@@ -1,7 +1,7 @@
 import argparse
 import re
 import os
-import urllib.request
+from urllib import request, error
 import sys
 
 sources = ["butterflies","christmas","classic","crazytaxi","doomriders",
@@ -23,18 +23,23 @@ if args.destination:
 else:
     dest = os.getcwd()
     for source in sources: 
-        response = urllib.request.urlopen(f"https://jetsetradio.live/{stationsDirectory}/{source}/~list.js")  
-        text = response.read().decode('utf-8')
-        response.close()
-        tracks = re.findall(r"] = \"([^\"]+)\"\;",text)
+        req = request.Request(f"https://jetsetradio.live/{stationsDirectory}/{source}/~list.js")
         try:
-            newfile = open(f"{dest}\\{source}.m3u8","w")
-        except FileNotFoundError as error:
-            print(f"{dest} does not exist.")
-            break
+            response = request.urlopen(req)
+        except error.HTTPError as e:
+            print(f"Skipped {source} ({e.code})")
         else:
-            newfile.write("#")
-            for song in tracks:
-                newfile.write(f"\nhttps://jetsetradio.live/{stationsDirectory}/{source}/{song}.mp3")
-            newfile.close()
-            print(f"Finished {source}")
+            text = response.read().decode('utf-8')
+            response.close()
+            tracks = re.findall(r"] = \"([^\"]+)\"\;",text)
+            try:
+                newfile = open(f"{dest}\\{source}.m3u8","w")
+            except FileNotFoundError:
+                print(f"{dest} does not exist.")
+                break
+            else:
+                newfile.write("#")
+                for song in tracks:
+                    newfile.write(f"\nhttps://jetsetradio.live/{stationsDirectory}/{source}/{song}.mp3")
+                newfile.close()
+                print(f"Finished {source}")
